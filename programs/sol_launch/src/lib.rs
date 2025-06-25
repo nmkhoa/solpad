@@ -7,7 +7,7 @@ pub mod states;
 
 pub use constants::*;
 pub use errors::*;
-pub use instructions::{create_pool::*, initialize::*};
+pub use instructions::{buy_token::*, create_pool::*, initialize::*};
 pub use states::*;
 
 declare_id!("ESn9HUCzhjXYqSUpMDiSs1JV4znknv4LvHQFxUL3fTBG");
@@ -48,5 +48,9 @@ pub mod sol_launch {
             token,
             signer,
         )
+    }
+
+    pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {
+        process_buy_token(ctx, amount)
     }
 }
