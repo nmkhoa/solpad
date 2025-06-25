@@ -13,4 +13,7 @@ pub enum ErrorMessage {
 
     #[msg("Not enough tokens for sale")]
     NotEnoughTokensForSale,
+
+    #[msg("Math overflow")]
+    MathOverflow,
 }
