@@ -83,6 +83,7 @@ describe('sol_launch', () => {
                         new anchor.BN(tokenRate).mul(new anchor.BN(10).pow(new anchor.BN(decimals))),
                         decimals,
                         currency.publicKey,
+                        decimals,
                         token.publicKey,
                         signer.publicKey
                     )
@@ -99,4 +100,54 @@ describe('sol_launch', () => {
         it('Should revert if invalid time', () => {});
         it('Should create pool successfull', () => {});
     });
+
+    // describe('Buy token', () => {
+    //     it('Should buy token successfully', async () => {
+    //         // Giả sử pool đã được tạo và các account đã có
+    //         // Tạo các PDA cho pool, buyer_account, buyer_token_account, pool_token_account
+    //         const [poolAccount] = anchor.web3.PublicKey.findProgramAddressSync([Buffer.from('pool_seed'), token.publicKey.toBuffer()], program.programId);
+    //         const [buyerAccount] = anchor.web3.PublicKey.findProgramAddressSync([Buffer.from('buyer'), owner.publicKey.toBuffer(), poolAccount.toBuffer()], program.programId);
+    //         // Tạo các ATA cho buyer và pool (SPL Token)
+    //         const buyerTokenAccount = await anchor.utils.token.associatedAddress({
+    //             mint: currency.publicKey,
+    //             owner: owner.publicKey,
+    //         });
+    //         const poolTokenAccount = await anchor.utils.token.associatedAddress({
+    //             mint: currency.publicKey,
+    //             owner: poolAccount,
+    //         });
+
+    //         // Airdrop thêm cho buyer nếu cần
+    //         await provider.connection.confirmTransaction(await provider.connection.requestAirdrop(owner.publicKey, 1_000 * 10 ** 9));
+
+    //         // Mint một lượng token vào buyer_token_account nếu cần (bạn cần có logic mint ngoài test này)
+
+    //         // Chờ đến thời gian pool bắt đầu (nếu cần)
+    //         // await sleep(...);
+
+    //         const buyAmount = new anchor.BN(100);
+
+    //         const tx = await program.methods
+    //             .buyToken(buyAmount)
+    //             .accounts({
+    //                 buyer: owner.publicKey,
+    //                 poolAccount,
+    //                 buyerAccount,
+    //                 buyerTokenAccount,
+    //                 poolTokenAccount,
+    //                 tokenProgram: anchor.utils.token.TOKEN_PROGRAM_ID,
+    //                 systemProgram: anchor.web3.SystemProgram.programId,
+    //                 associatedTokenProgram: anchor.utils.token.ASSOCIATED_PROGRAM_ID,
+    //                 rent: anchor.web3.SYSVAR_RENT_PUBKEY,
+    //             })
+    //             .signers([owner])
+    //             .rpc();
+
+    //         console.log('Buy token tx:', tx);
+
+    //         // Fetch lại buyer_account để kiểm tra số lượng đã mua
+    //         const buyerAcc = await program.account.buyerAccount.fetch(buyerAccount);
+    //         assert.equal(buyerAcc.tokenAmount.toString(), buyAmount.toString());
+    //     });
+    // });
 });
