@@ -1,12 +1,12 @@
 use anchor_lang::prelude::*;
 
 pub mod constants;
-pub mod error;
+pub mod errors;
 pub mod instructions;
 pub mod states;
 
 pub use constants::*;
-pub use error::*;
+pub use errors::*;
 pub use instructions::{create_pool::*, initialize::*};
 pub use states::*;
 
@@ -22,21 +22,31 @@ pub mod sol_launch {
 
     pub fn creator_create_pool(
         ctx: Context<CreatePool>,
-        start_time: i64,
-        end_time: i64,
-        claim_time: i64,
-        total_amount: u64,
-        price: u64,
-        max_purchase: u64,
+        start_time: u64,
+        end_time: u64,
+        claim_time: u64,
+        tokens_for_sale: u64,
+        token_decimals: u8,
+        token_rate: u64,
+        decimals: u8,
+        currency: Pubkey,
+        currency_decimal: u8,
+        token: Pubkey,
+        signer: Pubkey,
     ) -> Result<()> {
         process_create_pool(
             ctx,
             start_time,
             end_time,
             claim_time,
-            total_amount,
-            price,
-            max_purchase,
+            tokens_for_sale,
+            token_decimals,
+            token_rate,
+            decimals,
+            currency,
+            currency_decimal,
+            token,
+            signer,
         )
     }
 }

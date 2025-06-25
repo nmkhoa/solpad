@@ -1,74 +1,75 @@
 use anchor_lang::prelude::*;
-use anchor_spl::token::{Mint, Token};
+use anchor_lang::solana_program::sysvar::clock;
 
-use crate::constants::POOL_SEED;
-use crate::error::ErrorCodeApp;
-use crate::states::config_account::ConfigAccount;
-use crate::states::create_pool::Pool;
+use crate::{
+    config_account::ConfigAccount, pool_account::PoolAccount, ErrorMessage, CONFIG_SEED, POOL_SEED,
+};
 
 #[derive(Accounts)]
 #[instruction(
-    start_time: i64,
-    end_time: i64,
-    claim_time: i64,
-    total_amount: u64,
-    price: u64,
-    max_purchase: u64
+    start_time: u64,
+    end_time: u64,
+    claim_time: u64,
+    tokens_for_sale: u64,
+    token_decimals: u8,
+    token_rate: u64,
+    decimals: u8,
+    currency: Pubkey,
+    token: Pubkey,
+    signer: Pubkey
 )]
 pub struct CreatePool<'info> {
     #[account(mut)]
-    pub creator: Signer<'info>,
-
+    pub signer: Signer<'info>,
     #[account(
-        has_one = creator,
-        seeds = [b"config"],
+        init,
+        payer = signer,
+        space = PoolAccount::LEN,
+        seeds = [POOL_SEED, token.key().as_ref()],
+        bump
+    )]
+    pub pool_account: Account<'info, PoolAccount>,
+    #[account(
+        seeds = [CONFIG_SEED],
+        constraint = config_account.creator.key() == signer.key() @ErrorMessage::Unauthorized ,
         bump
     )]
     pub config_account: Account<'info, ConfigAccount>,
-
-    #[account(
-        init,
-        payer = creator,
-        space = Pool::LEN,
-        seeds = [POOL_SEED, currency.key().as_ref()],
-        bump
-    )]
-    pub pool: Account<'info, Pool>,
-
-    pub currency: Account<'info, Mint>,
-
+    // System program
     pub system_program: Program<'info, System>,
-    pub token_program: Program<'info, Token>,
-    pub rent: Sysvar<'info, Rent>,
 }
 
 pub fn process_create_pool(
     ctx: Context<CreatePool>,
-    start_time: i64,
-    end_time: i64,
-    claim_time: i64,
-    total_amount: u64,
-    price: u64,
-    max_purchase: u64,
+    start_time: u64,
+    end_time: u64,
+    claim_time: u64,
+    tokens_for_sale: u64,
+    token_decimals: u8,
+    token_rate: u64,
+    decimals: u8,
+    currency: Pubkey,
+    currency_decimal: u8,
+    token: Pubkey,
+    signer: Pubkey,
 ) -> Result<()> {
-    require!(start_time < end_time, ErrorCodeApp::InvalidTimeRange);
-    require!(end_time < claim_time, ErrorCodeApp::InvalidTimeRange);
-    require!(total_amount > 0, ErrorCodeApp::InvalidAmount);
-    require!(price > 0, ErrorCodeApp::InvalidPrice);
-    require!(
-        max_purchase > 0 && max_purchase <= total_amount,
-        ErrorCodeApp::InvalidMaxPurchase
-    );
+    let clock = Clock::get()?;
+    let now = clock.unix_timestamp as u64;
+    require!(start_time > now, ErrorMessage::InvalidTime);
+    require!(start_time < end_time, ErrorMessage::InvalidTime);
+    require!(end_time < claim_time, ErrorMessage::InvalidTime);
 
-    let pool = &mut ctx.accounts.pool;
-    pool.start_time = start_time;
-    pool.end_time = end_time;
-    pool.claim_time = claim_time;
-    pool.total_amount = total_amount;
-    pool.price = price;
-    pool.currency = ctx.accounts.currency.key();
-    pool.max_purchase = max_purchase;
-    pool.creator = ctx.accounts.creator.key();
-
+    let pool_account = &mut ctx.accounts.pool_account;
+    pool_account.start_time = start_time;
+    pool_account.end_time = end_time;
+    pool_account.claim_time = claim_time;
+    pool_account.tokens_for_sale = tokens_for_sale;
+    pool_account.token_decimals = token_decimals;
+    pool_account.token_rate = token_rate;
+    pool_account.decimals = decimals;
+    pool_account.currency = currency.key();
+    pool_account.currency_decimal = currency_decimal;
+    pool_account.token = token.key();
+    pool_account.signer = signer.key();
     Ok(())
 }
