@@ -37,6 +37,7 @@ pub fn process_buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {
     ctx.accounts.pool_account.tokens_for_sale -= amount;
 
     let buyer_account: &mut Account<'_, BuyerAccount> = &mut ctx.accounts.buyer_account;
+    buyer_account.pool = ctx.accounts.pool_account.key();
     buyer_account.token_amount += amount;
     buyer_account.token_decimals = ctx.accounts.pool_account.token_decimals;
     buyer_account.currency = ctx.accounts.pool_account.currency;
