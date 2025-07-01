@@ -7,12 +7,11 @@ pub struct PoolAccount {
     pub end_time: u64,
     pub claim_time: u64,
     pub tokens_for_sale: u64,
-    pub token_decimals: u8,
-    pub token_rate: u64,
-    pub decimals: u8,
-    pub currency: Pubkey,
-    pub currency_decimal: u8,
-    pub token: Pubkey,
+    pub tokens_sold: u64,
+    pub token_pub: Pubkey,
+    pub conversion_rate: u8,
+    pub purchase_token_pub: Pubkey,
+    pub receiver_token_account: Pubkey,
     pub signer: Pubkey,
 }
 

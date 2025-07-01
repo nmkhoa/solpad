@@ -5,9 +5,8 @@ use anchor_lang::prelude::*;
 pub struct BuyerAccount {
     pub pool: Pubkey,
     pub token_amount: u64,
-    pub token_decimals: u8,
-    pub token_address: Pubkey,
-    pub currency: Pubkey,
+    pub token_pub: Pubkey,
+    pub purchase_pub: Pubkey,
 }
 
 impl BuyerAccount {

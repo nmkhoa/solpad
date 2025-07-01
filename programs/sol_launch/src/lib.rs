@@ -26,12 +26,10 @@ pub mod sol_launch {
         end_time: u64,
         claim_time: u64,
         tokens_for_sale: u64,
-        token_decimals: u8,
-        token_rate: u64,
-        decimals: u8,
-        currency: Pubkey,
-        currency_decimal: u8,
-        token: Pubkey,
+        tokens_sold: u64,
+        token_pub: Pubkey,
+        conversion_rate: u8,
+        purchase_pub: Pubkey,
         signer: Pubkey,
     ) -> Result<()> {
         process_create_pool(
@@ -40,12 +38,10 @@ pub mod sol_launch {
             end_time,
             claim_time,
             tokens_for_sale,
-            token_decimals,
-            token_rate,
-            decimals,
-            currency,
-            currency_decimal,
-            token,
+            tokens_sold,
+            token_pub,
+            conversion_rate,
+            purchase_pub,
             signer,
         )
     }
