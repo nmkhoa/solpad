@@ -17,7 +17,8 @@ use crate::{
     tokens_sold: u64,
     token_pub: Pubkey,
     conversion_rate: u8,
-    purchase_pub: Pubkey,
+    purchase_token_decimal: Pubkey,
+    purchase_token_pub: Pubkey,
     signer: Pubkey,
 )]
 pub struct CreatePool<'info> {
@@ -27,7 +28,7 @@ pub struct CreatePool<'info> {
         init,
         payer = signer,
         space = PoolAccount::LEN,
-        seeds = [POOL_SEED, purchase_pub.key().as_ref()],
+        seeds = [POOL_SEED, purchase_token_pub.key().as_ref()],
         bump
     )]
     pub pool_account: Account<'info, PoolAccount>,
@@ -62,6 +63,7 @@ pub fn process_create_pool(
     tokens_sold: u64,
     token_pub: Pubkey,
     conversion_rate: u8,
+    purchase_token_decimal: u8,
     purchase_token_pub: Pubkey,
     signer: Pubkey,
 ) -> Result<()> {
@@ -79,6 +81,7 @@ pub fn process_create_pool(
     pool_account.tokens_sold = tokens_sold;
     pool_account.token_pub = token_pub;
     pool_account.conversion_rate = conversion_rate;
+    pool_account.purchase_token_decimal = purchase_token_decimal;
     pool_account.purchase_token_pub = purchase_token_pub.key();
     pool_account.receiver_token_account = ctx.accounts.receiver_token_account.key();
     pool_account.signer = signer.key();

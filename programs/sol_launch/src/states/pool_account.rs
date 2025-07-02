@@ -10,6 +10,7 @@ pub struct PoolAccount {
     pub tokens_sold: u64,
     pub token_pub: Pubkey,
     pub conversion_rate: u8,
+    pub purchase_token_decimal: u8,
     pub purchase_token_pub: Pubkey,
     pub receiver_token_account: Pubkey,
     pub signer: Pubkey,
