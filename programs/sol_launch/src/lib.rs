@@ -29,6 +29,7 @@ pub mod sol_launch {
         tokens_sold: u64,
         token_pub: Pubkey,
         conversion_rate: u8,
+        purchase_decimal: u8,
         purchase_pub: Pubkey,
         signer: Pubkey,
     ) -> Result<()> {
@@ -41,6 +42,7 @@ pub mod sol_launch {
             tokens_sold,
             token_pub,
             conversion_rate,
+            purchase_decimal,
             purchase_pub,
             signer,
         )
